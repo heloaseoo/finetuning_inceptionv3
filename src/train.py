@@ -1,7 +1,7 @@
 from keras.models import Model
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras.preprocessing.image import ImageDataGenerator
-from keras.optimizers import SGD
+from keras.optimizers import SGD, RMSprop
 from keras.callbacks import ModelCheckpoint
 
 from inception_v3 import InceptionV3
@@ -45,7 +45,8 @@ def setup_to_transfer_learn(model, base_model):
 	"""Freeze all layers and compile the model"""
 	for layer in base_model.layers:
 		layer.trainable = False
-	model.compile(optimizer='rmsprop',
+	rmsprop = RMSprop(lr=0.0001, rho=0.9, epsilon=1e-08, decay=0.0)
+	model.compile(optimizer=rmsprop,
 				  loss='categorical_crossentropy',
 				  metrics=['accuracy'])
 
